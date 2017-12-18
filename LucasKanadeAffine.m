@@ -7,6 +7,8 @@ function M = LucasKanadeAffine(It, It1)
 It=im2double(It);
 It1=im2double(It1);
 
+[a,b]=size(It);
+
 % Calculate gradient of template
 [dx,dy]=gradient(It);
 
@@ -14,7 +16,8 @@ dx=dx(:);
 dy=dy(:);
 
 
-[X,Y]=meshgrid(1:size(It,2),1:size(It,1));
+[X,Y]=meshgrid(1:b,1:a);
+
 X=X(:);
 Y=Y(:);
 
@@ -23,9 +26,8 @@ Y=Y(:);
 steepest_desc=[X.*dx X.*dy Y.*dx Y.*dy dx dy];
 
 p=[0;0;0; 0;0;0];
-i=0;
-while i<100
-    i=i+1;
+
+for i=1:1:100
     M=[1+p(1) p(3) p(5);p(2) 1+p(4) p(6);0 0 1];
     warp=M*[X(:)';Y(:)';ones(1,numel(It))];
     common_region=(warp(1,:)>=1) & (warp(1,:)<size(It1,2)) & (warp(2,:)>=1) & (warp(2,:)<size(It1,1));
